@@ -49,37 +49,36 @@ def display_games():
 	   print(f"{game}: Copies {details['quantity']} - ${details['cost']} ")
 	
 def rent_game(username):
-	balance = user_accounts[username]["balance"]
-	points = user_accounts[username]["points"]
-	item_game = input("Choose a game to borrow: ")
-	if item_game in game_library:
-		if game_library[item_game]["quantity"] > 0:
-		   game_price = game_library[item_game]["cost"]
-		   print(f"Price of {item_game}: ${game_price} with {game_library[item_game]['quantity']} current copies.")
-		   ans = input("Borrow it (Y or N): ")
-		   if ans == 'Y':
-		   	if balance >= game_price:
-		   		balance -= game_price
-		   		game_price /= 2
-		   		if game_price <= 0.5:
-		   			pass
-		   		else:	
-		   			points += 1
-		   		game_library[item_game]["quantity"] -= 1
-		   		user_accounts[username]["balance"] = balance
-		   		user_accounts[username]["points"] = points
-		   		user_accounts[username]["inventory"].setdefault(item_game, 0)
-		   		user_accounts[username]["inventory"][item_game] +=1
-		   		print(f"Borrowed 1 copy of {item_game}")
-		   		print(f"Remaining Balance: ${balance}")
-		   	else:
-		   	     print(f"Insufficient Funds!")
-		   else: 
-		   	logged_in_menu(username)
-		else:
-			print("No more copies!")
-	else:
-		print("Game is not in Store!")    
+    balance = user_accounts[username]["balance"]
+    points = user_accounts[username]["points"]
+    item_game = input("Choose a game to borrow: ")
+    if item_game in game_library:
+        if game_library[item_game]["quantity"] > 0:
+            game_price = game_library[item_game]["cost"]
+            print(f"Price of {item_game}: ${game_price} with {game_library[item_game]['quantity']} current copies.")
+            ans = input("Borrow it (Y or N): ")
+            if ans == 'Y':
+                if balance >= game_price:
+                    balance -= game_price
+                    game_price /= 2
+                    if game_price >= 1:
+                        points += 1
+                    game_library[item_game]["quantity"] -= 1
+                    user_accounts[username]["balance"] = balance
+                    user_accounts[username]["points"] = points
+                    user_accounts[username]["inventory"].setdefault(item_game, 0)
+                    user_accounts[username]["inventory"][item_game] += 1
+                    print(f"Borrowed 1 copy of {item_game}")
+                    print(f"Remaining Balance: ${balance}")
+                else:
+                    print("Insufficient balance")
+            else:
+                logged_in_menu(username)
+        else:
+            print("No more copies!")
+    else:
+        print("Game is not in Store!")
+   
 	
 def return_game(username):
 	item_game = input("Choose a game to return: ")
